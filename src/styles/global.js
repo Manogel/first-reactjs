@@ -28,4 +28,12 @@ export default createGlobalStyle`
     cursor: pointer;
   }
 
+  li {
+    list-style: none;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
 `;

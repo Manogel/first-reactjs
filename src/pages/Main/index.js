@@ -1,13 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
-
-import { Container, Form, SubmitButton } from './styles';
+import { Link } from 'react-router-dom';
+import { Container, Form, SubmitButton, List } from './styles';
 import api from '../../services/api';
 
 export default function Main() {
   const [repository, setRepository] = useState('');
   const [repositories, setRepositories] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const repositoriesSaved = localStorage.getItem('repositories');
+
+    if (repositoriesSaved) {
+      setRepositories(JSON.parse(repositoriesSaved));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('repositories', JSON.stringify(repositories));
+  }, [repositories]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -43,6 +55,16 @@ export default function Main() {
           )}
         </SubmitButton>
       </Form>
+      <List>
+        {repositories.map(repository => (
+          <li key={repository.name}>
+            <span>{repository.name}</span>
+            <Link to={`/repository/${encodeURIComponent(repository.name)}`}>
+              Detalhes
+            </Link>
+          </li>
+        ))}
+      </List>
     </Container>
   );
 }
